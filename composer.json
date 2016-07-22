@@ -1,5 +1,5 @@
 {
-    "name": "anmoroz/XlsxTemplatePHP",
+    "name": "anmoroz/xlsx-template-php",
     "description": "A library for templating of Excel Office documents. Supports MS Excel xlsx. Uses PHPExcel library.",
     "type": "library",
     "keywords": [

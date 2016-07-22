@@ -1,4 +1,4 @@
-XlsxTemplatePHP
+xlsx-template-php
 ============================
 A library for templating of Excel Office documents. Supports MS Excel xlsx. Uses PHPExcel library.
 
@@ -7,7 +7,7 @@ Not only large documents.
 An example
 ------------
 
-#### Input teemplate
+#### Input template
 
 ![waybill_template](https://raw.github.com/anmoroz/XlsxTemplatePHP/master/demo/waybill_template.jpg)
 
