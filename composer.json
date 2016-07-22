@@ -1,0 +1,30 @@
+{
+    "name": "anmoroz/XlsxTemplatePHP",
+    "description": "A library for templating of Excel Office documents. Supports MS Excel xlsx. Uses PHPExcel library.",
+    "type": "library",
+    "keywords": [
+        "xlsx",
+        "template",
+        "excel"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.6",
+        "phpoffice/phpexcel": "~1.8.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8 || ^5.0"
+    },
+    "authors": [
+        {
+            "name": "Andrey Morozov",
+            "email": "pavlovsk36@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "XLSXTemplate\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
