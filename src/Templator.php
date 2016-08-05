@@ -37,6 +37,16 @@ class Templator
      */
     private $objPHPExcel;
 
+    /**
+     * @var bool
+     */
+    private $needsIgnoreEmpty = true;
+
+    /**
+     * @var string
+     */
+    private $limitColumnLetter;
+
     public function __construct($templateFile, $outputDir, $outputFileName)
     {
         if (!file_exists($templateFile) || !is_readable($templateFile)) {
@@ -79,11 +89,13 @@ class Templator
 
         foreach ($rowIterator as $row) {
             $cellIterator = $row->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(true);
+            $cellIterator->setIterateOnlyExistingCells($this->needsIgnoreEmpty);
 
-            //print_r($row->getRowIndex().PHP_EOL);
-
+            /** @var \PHPExcel_Cell $cell */
             foreach ($cellIterator as $cell) {
+                if ($this->limitColumnLetter && $cell->getColumn() === $this->limitColumnLetter) {
+                    break;
+                }
                 $pCoordinate = $cell->getColumn().$cell->getRow();
                 $value = $cell->getValue();
 
@@ -136,6 +148,7 @@ class Templator
         $cellIterator->setIterateOnlyExistingCells(true);
 
         $loopVariables = [];
+        /** @var \PHPExcel_Cell $cell */
         foreach ($cellIterator as $cell) {
             array_push($loopVariables, $cell->getValue());
         }
@@ -198,12 +211,12 @@ class Templator
     }
 
     /**
-     * @param $worksheet
-     * @param $pCoordinate
-     * @param $cellValue
+     * @param PHPExcel_Worksheet $worksheet
+     * @param string $pCoordinate
+     * @param string $cellValue
      * @param $dataSource
-     * @param $loopDataMap
-     * @param $rowNumber
+     * @param array $loopDataMap
+     * @param int $rowNumber
      */
     private function replaceСontentInLoop($worksheet, $pCoordinate, $cellValue, $dataSource, $loopDataMap, $rowNumber)
     {
@@ -266,6 +279,24 @@ class Templator
     public function setSettings(Settings $settings)
     {
         $this->settings = $settings;
+    }
+
+    /**
+     * @param boolean $value
+     */
+    public function setNeedsIgnoreEmpty($value)
+    {
+        $this->needsIgnoreEmpty = (boolean) $value;
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setLimitColumnLetter($value)
+    {
+        if (preg_match('/^[A-Z]{1,2}$/', $value)) {
+            $this->limitColumnLetter = $value;
+        }
     }
 
     /**
