@@ -77,7 +77,7 @@ class Templator
             $inputFileType = PHPExcel_IOFactory::identify($this->templateFile);
             $objReader = PHPExcel_IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($this->templateFile);
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             new \Exception('Error loading file "'.pathinfo($this->templateFile, PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
@@ -101,8 +101,10 @@ class Templator
 
                 if ($this->isStartLoop($value)) {
                     $worksheet->setCellValue($pCoordinate, '');
-                    $this->replaceRowsСontentInLoop($rowIterator, $worksheet, $pCoordinate, $value);
+                    $this->replaceRowsСontentInLoop($rowIterator, $worksheet, $value);
                     $worksheet->removeRow($row->getRowIndex(), 1);
+                    $rowIterator->resetEnd();
+
                     break;
                 }
 
@@ -129,10 +131,9 @@ class Templator
     /**
      * @param PHPExcel_Worksheet_RowIterator $rowIterator
      * @param PHPExcel_Worksheet $worksheet
-     * @param string $pCoordinate
      * @param string $cellValue
      */
-    private function replaceRowsСontentInLoop($rowIterator, $worksheet, $pCoordinate, $cellValue)
+    private function replaceRowsСontentInLoop($rowIterator, $worksheet, $cellValue)
     {
         $loopKey = $this->extractLoopKey($cellValue);
 
@@ -154,7 +155,6 @@ class Templator
         }
 
         $worksheet->insertNewRowBefore($rowIterator->key() + 1, $loopData->count() - 1);
-
 
         $loopDataMap = $loopData->getMap();
 
