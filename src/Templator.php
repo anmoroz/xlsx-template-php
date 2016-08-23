@@ -154,7 +154,9 @@ class Templator
             array_push($loopVariables, $cell->getValue());
         }
 
-        $worksheet->insertNewRowBefore($rowIterator->key() + 1, $loopData->count() - 1);
+        if ($loopData->count() > 1) {
+            $worksheet->insertNewRowBefore($rowIterator->key() + 1, $loopData->count() - 1);
+        }
 
         $loopDataMap = $loopData->getMap();
 
