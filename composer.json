@@ -1,7 +1,7 @@
 {
     "name": "anmoroz/xlsx-template-php",
     "description": "A library for templating of Excel Office documents. Supports MS Excel xlsx. Uses PHPSpreadsheet library.",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "type": "library",
     "keywords": [
         "xlsx",
