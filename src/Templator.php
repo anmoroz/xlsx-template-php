@@ -6,9 +6,9 @@
 
 namespace XLSXTemplate;
 
-use \PHPExcel_IOFactory;
-use \PHPExcel_Worksheet;
-use \PHPExcel_Worksheet_RowIterator;
+use \PhpOffice\PhpSpreadsheet\IOFactory;
+use \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use \PhpOffice\PhpSpreadsheet\Worksheet\RowIterator;
 
 class Templator
 {
@@ -33,9 +33,9 @@ class Templator
     private $settings;
 
     /**
-     * @var \PHPExcel
+     * @var \PhpOffice\PhpSpreadsheet\Spreadsheet
      */
-    private $objPHPExcel;
+    private $objPHPSpreadsheet;
 
     /**
      * @var bool
@@ -74,24 +74,24 @@ class Templator
         }
 
         try {
-            $inputFileType = PHPExcel_IOFactory::identify($this->templateFile);
-            $objReader = PHPExcel_IOFactory::createReader($inputFileType);
-            $objPHPExcel = $objReader->load($this->templateFile);
+            $inputFileType = IOFactory::identify($this->templateFile);
+            $objReader = IOFactory::createReader($inputFileType);
+            $objPHPSpreadsheet = $objReader->load($this->templateFile);
         } catch(\Exception $e) {
             new \Exception('Error loading file "'.pathinfo($this->templateFile, PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
-        /** @var PHPExcel_Worksheet $worksheet */
-        $worksheet = $objPHPExcel->getSheet(0);
+        /** @var \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $worksheet */
+        $worksheet = $objPHPSpreadsheet->getSheet(0);
 
-        /** @var PHPExcel_Worksheet_RowIterator $rowIterator */
+        /** @var \PhpOffice\PhpSpreadsheet\Worksheet\RowIterator $rowIterator */
         $rowIterator =  $worksheet->getRowIterator();
 
         foreach ($rowIterator as $row) {
             $cellIterator = $row->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells($this->needsIgnoreEmpty);
 
-            /** @var \PHPExcel_Cell $cell */
+            /** @var \PhpOffice\PhpSpreadsheet\Cell\Cell $cell */
             foreach ($cellIterator as $cell) {
                 if ($this->limitColumnLetter && $cell->getColumn() === $this->limitColumnLetter) {
                     break;
@@ -116,7 +116,7 @@ class Templator
 
 
 
-        $this->objPHPExcel = $objPHPExcel;
+        $this->objPHPSpreadsheet = $objPHPSpreadsheet;
     }
 
     /**
@@ -124,13 +124,13 @@ class Templator
      */
     public function save()
     {
-        $objWriter = PHPExcel_IOFactory::createWriter($this->objPHPExcel, 'Excel2007');
+        $objWriter = IOFactory::createWriter($this->objPHPSpreadsheet, 'Xlsx');
         $objWriter->save($this->outputDir.$this->outputFileName);
     }
 
     /**
-     * @param PHPExcel_Worksheet_RowIterator $rowIterator
-     * @param PHPExcel_Worksheet $worksheet
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\RowIterator $rowIterator
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $worksheet
      * @param string $cellValue
      */
     private function replaceRowsСontentInLoop($rowIterator, $worksheet, $cellValue)
@@ -149,7 +149,7 @@ class Templator
         $cellIterator->setIterateOnlyExistingCells(true);
 
         $loopVariables = [];
-        /** @var \PHPExcel_Cell $cell */
+        /** @var \PhpOffice\PhpSpreadsheet\Cell\Cell $cell */
         foreach ($cellIterator as $cell) {
             array_push($loopVariables, $cell->getValue());
         }
@@ -169,7 +169,7 @@ class Templator
             $cellIterator->setIterateOnlyExistingCells(true);
             $cellIndex = 0;
 
-            /** @var \PHPExcel_Cell $cell */
+            /** @var \PhpOffice\PhpSpreadsheet\Cell\Cell $cell */
             foreach ($cellIterator as $cell) {
                 $pCoordinate = $cell->getColumn().$cell->getRow();
 
@@ -213,7 +213,7 @@ class Templator
     }
 
     /**
-     * @param PHPExcel_Worksheet $worksheet
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $worksheet
      * @param string $pCoordinate
      * @param string $cellValue
      * @param $dataSource
@@ -243,11 +243,11 @@ class Templator
     }
 
     /**
-     * @param PHPExcel_Worksheet $worksheet
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $worksheet
      * @param string $pCoordinate
      * @param string $cellValue
      */
-    private function replaceСontent(PHPExcel_Worksheet $worksheet, $pCoordinate, $cellValue)
+    private function replaceСontent(Worksheet $worksheet, $pCoordinate, $cellValue)
     {
         $templateKey = $this->extractTemplateKey($cellValue);
         $worksheet->setCellValue($pCoordinate, $this->settings->getValue($templateKey));

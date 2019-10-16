@@ -1,6 +1,6 @@
 xlsx-template-php
 ============================
-A library for templating of Excel Office documents. Supports MS Excel xlsx. Uses PHPExcel library.
+A library for templating of Excel Office documents. Supports MS Excel xlsx. Uses PhpSpreadsheet library.
 
 Not only large documents.
 
